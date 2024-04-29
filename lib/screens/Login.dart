@@ -27,6 +27,9 @@ class _LoginState extends State<Login> {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
       User? user = userCredential.user;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Login Successful"),
+      ));
       Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
       return user;
     } catch (e) {
