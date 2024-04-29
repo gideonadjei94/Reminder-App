@@ -1,41 +1,29 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:reminder_app/screens/Home.dart';
-import 'package:reminder_app/screens/SignUp.dart';
+import 'package:reminder_app/screens/Login.dart';
 import 'package:reminder_app/utils/app_colors.dart';
 import 'package:reminder_app/widgets/round_gradient_button.dart';
 import 'package:reminder_app/widgets/round_text_field.dart';
 
-class Login extends StatefulWidget {
-  const Login({super.key});
+class SignUp extends StatefulWidget {
+  const SignUp({super.key});
 
   @override
-  State<Login> createState() => _LoginState();
+  State<SignUp> createState() => _SignUpState();
 }
 
-class _LoginState extends State<Login> {
+class _SignUpState extends State<SignUp> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
+  CollectionReference _users = FirebaseFirestore.instance.collection("users");
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isObscure = true;
+  bool _isCheck = false;
   final _formKey = GlobalKey<FormState>();
-
-  Future<User?> _signIn(
-      BuildContext context, String email, String password) async {
-    try {
-      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-          email: email, password: password);
-      User? user = userCredential.user;
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
-      return user;
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("Login Failed, Please check your email and password"),
-      ));
-      return null;
-    }
-  }
 
   @override
   void initState() {
@@ -79,7 +67,7 @@ class _LoginState extends State<Login> {
                         height: media.width * 0.01,
                       ),
                       Text(
-                        "Welcome Back",
+                        "Create an Account",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: AppColors.blackColor,
@@ -91,7 +79,37 @@ class _LoginState extends State<Login> {
                   ),
                 ),
                 SizedBox(
-                  height: media.width * 0.1,
+                  height: media.width * 0.03,
+                ),
+                RoundTextField(
+                  textEditingController: _firstNameController,
+                  hintText: "First Name",
+                  icon: "assets/icons/profile_icon.png",
+                  textInputType: TextInputType.name,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please enter your First Name";
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(
+                  height: media.width * 0.03,
+                ),
+                RoundTextField(
+                  textEditingController: _lastNameController,
+                  hintText: "Last Name",
+                  icon: "assets/icons/profile_icon.png",
+                  textInputType: TextInputType.name,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please enter your Last Name";
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(
+                  height: media.width * 0.03,
                 ),
                 RoundTextField(
                   textEditingController: _emailController,
@@ -106,7 +124,7 @@ class _LoginState extends State<Login> {
                   },
                 ),
                 SizedBox(
-                  height: media.width * 0.05,
+                  height: media.width * 0.03,
                 ),
                 RoundTextField(
                   textEditingController: _passwordController,
@@ -144,29 +162,68 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                 ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                      onPressed: () {},
-                      child: Text(
-                        "Forgot your password",
-                        style: TextStyle(
-                            color: AppColors.secondaryColor1,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500),
-                      )),
+                SizedBox(
+                  height: media.width * 0.02,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _isCheck = !_isCheck;
+                          });
+                        },
+                        icon: Icon(
+                          _isCheck
+                              ? Icons.check_box_outlined
+                              : Icons.check_box_outline_blank,
+                          color: AppColors.grayColor,
+                        )),
+                    Expanded(
+                        child: Text(
+                      "By clicking you accept our Privacy Policy and\nterms of Use",
+                      style: TextStyle(
+                        color: AppColors.grayColor,
+                        fontSize: 10,
+                      ),
+                    ))
+                  ],
                 ),
                 SizedBox(
-                  height: media.width * 0.1,
+                  height: media.width * 0.05,
                 ),
                 RoundGradientButton(
-                    title: "Login",
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        _signIn(context, _emailController.text,
-                            _passwordController.text);
+                  title: "Create Account",
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      if (_isCheck) {
+                        try {
+                          UserCredential userCredential =
+                              await _auth.createUserWithEmailAndPassword(
+                                  email: _emailController.text,
+                                  password: _passwordController.text);
+
+                          String uid = userCredential.user!.uid;
+
+                          await _users.doc(uid).set({
+                            'email': _emailController.text,
+                            'firstName': _firstNameController.text,
+                            'lastName': _lastNameController.text,
+                          });
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text("Account created")));
+
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => Login()));
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(e.toString())));
+                        }
                       }
-                    }),
+                    }
+                  },
+                ),
                 SizedBox(
                   height: media.width * 0.01,
                 ),
@@ -246,7 +303,7 @@ class _LoginState extends State<Login> {
                 TextButton(
                     onPressed: () {
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => SignUp()));
+                          MaterialPageRoute(builder: (context) => Login()));
                     },
                     child: RichText(
                         textAlign: TextAlign.center,
@@ -257,9 +314,9 @@ class _LoginState extends State<Login> {
                             fontWeight: FontWeight.w400,
                           ),
                           children: [
-                            TextSpan(text: "Don't have an account?  "),
+                            TextSpan(text: "Already have an account?  "),
                             TextSpan(
-                                text: "Register",
+                                text: "Login",
                                 style: TextStyle(
                                   color: AppColors.secondaryColor1,
                                   fontSize: 15,
