@@ -27,3 +27,4 @@ Through this project, I have learned:
 Contributions are welcome! If you have any suggestions, bug fixes, or feature requests, please open an issue or submit a pull request.
 
 <img src="https://github.com/gideonadjei94/Reminder-App/assets/124469965/c1f86664-cc66-4a3e-a300-4a6fba11f89b" width = "270" height = "600">
+<img src = "https://github.com/gideonadjei94/Reminder-App/assets/124469965/08ab57d6-1724-48dc-9d7d-c957ff84f972"  width = "270" height = "600">
