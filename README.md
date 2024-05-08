@@ -30,3 +30,6 @@ Contributions are welcome! If you have any suggestions, bug fixes, or feature re
 <img src = "https://github.com/gideonadjei94/Reminder-App/assets/124469965/08ab57d6-1724-48dc-9d7d-c957ff84f972" width = "270" height = "600">
 <img src = "https://github.com/gideonadjei94/Reminder-App/assets/124469965/85a52758-2f7d-4312-9090-dd72bb079f5f" width = "270" height = "600">
 <img src = "https://github.com/gideonadjei94/Reminder-App/assets/124469965/914eb687-991b-41ca-b9bf-f3f869dc4320" width = "270" height = "600">
+<img src = "https://github.com/gideonadjei94/Reminder-App/assets/124469965/fdbc33af-4220-42f4-b6c8-c1b13f82f468" width = "270" height = "600">
+<img src = "https://github.com/gideonadjei94/Reminder-App/assets/124469965/7f8288b9-940c-4f34-b20f-154ae36a49a3" width = "270" height = "600">
+<img src = "https://github.com/gideonadjei94/Reminder-App/assets/124469965/439ba4c2-3022-4737-b654-a500bd41f146" width = "270" height = "600">
