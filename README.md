@@ -25,3 +25,6 @@ Through this project, I have learned:
 
 ## Contributing
 Contributions are welcome! If you have any suggestions, bug fixes, or feature requests, please open an issue or submit a pull request.
+
+
+![Screenshot_1715226953](https://github.com/gideonadjei94/Reminder-App/assets/124469965/c1f86664-cc66-4a3e-a300-4a6fba11f89b)
